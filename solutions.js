@@ -57,3 +57,53 @@ console.log(
   )
 );
 
+// problem3
+function deepFreeze(obj) {
+  if (obj === null || typeof obj !== 'object') return obj
+
+  Object.values(obj).forEach((value) => {
+    if (value !== null && typeof value === 'object' && !Object.isFrozen(value)) {
+      deepFreeze(value)
+    }
+  })
+
+  return Object.freeze(obj)
+}
+
+// problem4
+function createCounter() {
+  let count = 0;
+
+  return {
+    increment() {
+      count += 1;
+      return count;
+    },
+    decrement() {
+      count -= 1;
+      return count;
+    },
+    get value() {
+      return count;
+    },
+  };
+}
+// problem5
+function validateSchema(obj, schema) {
+  const errors = [];
+
+  for (const [key, expectedType] of Object.entries(schema)) {
+    if (!Object.hasOwn(obj, key)) {
+      errors.push(`${key}: missing property`);
+      continue;
+    }
+
+    const actualType = typeof obj[key];
+
+    if (actualType !== expectedType) {
+      errors.push(`${key}: expected ${expectedType}, got ${actualType}`);
+    }
+  }
+
+  return errors;
+}
